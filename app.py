@@ -39,41 +39,42 @@ try:
     if not os.path.exists(model_path):
         print(f"Compatible model not found, trying fallback...")
         model_path = NVAPS_MODEL_PATH_FALLBACK
-    
     print(f"Loading model from: {model_path}")
-    
-    # Load model with compile=False to avoid optimizer/version issues
-    nvaps_model = keras.models.load_model(
-        model_path, 
-        compile=False
-    )
-    
-    # Recompile with basic settings (only needed for inference)
-    nvaps_model.compile(
-        optimizer='adam',
-        loss='mse',
-        metrics=['mae']
-    )
-    
-    # Load auxiliary files
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+
+    nvaps_model = keras.models.load_model(model_path, compile=False)
+    nvaps_model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+
+    # Load auxiliary files with explicit checks
+    if not os.path.exists(NVAPS_SCALER_PATH):
+        raise FileNotFoundError(f"Scaler file not found: {NVAPS_SCALER_PATH}")
     with open(NVAPS_SCALER_PATH, 'rb') as f:
         nvaps_scaler = pickle.load(f)
+
+    if not os.path.exists(NVAPS_CONFIG_PATH):
+        raise FileNotFoundError(f"Config file not found: {NVAPS_CONFIG_PATH}")
     with open(NVAPS_CONFIG_PATH, 'r') as f:
         nvaps_config = json.load(f)
+
+    if not os.path.exists(NVAPS_LABEL_ENCODER_PATH):
+        raise FileNotFoundError(f"Label encoder file not found: {NVAPS_LABEL_ENCODER_PATH}")
     with open(NVAPS_LABEL_ENCODER_PATH, 'rb') as f:
         nvaps_label_encoder = pickle.load(f)
-    
+
     print("✓ NVAPS model loaded successfully")
     print(f"  Model input shape: {nvaps_model.input_shape}")
     print(f"  Model output shape: {nvaps_model.output_shape}")
     print(f"  Total parameters: {nvaps_model.count_params():,}")
-    
+
 except Exception as e:
     print(f"✗ NVAPS model failed to load: {e}")
+    import traceback
+    traceback.print_exc()
     print(f"\nTroubleshooting:")
-    print(f"  1. Ensure 'nvaps_lstm_model_compatible.h5' exists in current directory")
+    print(f"  1. Ensure all required files exist in current directory")
     print(f"  2. Check TensorFlow version: pip install tensorflow==2.19.0")
-    print(f"  3. Run the compatibility fixer script in Colab")
+    print(f"  3. Run the compatibility fixer script in Colab if needed")
     nvaps_model = None
     nvaps_scaler = None
     nvaps_config = None
