@@ -1,0 +1,9 @@
+flask
+flask-cors
+tensorflow
+keras
+numpy
+pandas
+requests
+xgboost
+gunicorn

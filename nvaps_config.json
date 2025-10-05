@@ -1,0 +1,61 @@
+{
+  "lstm_config": {
+    "target_var": "tpw_mean",
+    "lookback": 60,
+    "forecast_horizon": 60,
+    "feature_cols": [
+      "tpw_mean",
+      "tpw_std",
+      "tpw_min",
+      "tpw_max",
+      "month",
+      "day_of_year",
+      "month_sin",
+      "month_cos",
+      "day_sin",
+      "day_cos",
+      "tpw_roll_mean_7d",
+      "tpw_roll_std_7d",
+      "tpw_trend_7d",
+      "tpw_roll_mean_14d",
+      "tpw_roll_std_14d",
+      "tpw_trend_14d",
+      "tpw_roll_mean_30d",
+      "tpw_roll_std_30d",
+      "tpw_trend_30d"
+    ]
+  },
+  "xgb_config": {
+    "target": "weather_condition",
+    "lookback": 30,
+    "feature_cols": [
+      "tpw_mean",
+      "tpw_std",
+      "tpw_min",
+      "tpw_max",
+      "month_sin",
+      "month_cos",
+      "day_sin",
+      "day_cos",
+      "tpw_roll_mean_7d",
+      "tpw_roll_std_7d",
+      "tpw_trend_7d",
+      "tpw_roll_mean_14d",
+      "tpw_roll_std_14d",
+      "tpw_trend_14d",
+      "tpw_roll_mean_30d",
+      "tpw_roll_std_30d",
+      "tpw_trend_30d"
+    ]
+  },
+  "region_bounds": {
+    "lat": [
+      4,
+      12
+    ],
+    "lon": [
+      -4,
+      2
+    ]
+  }
+}
